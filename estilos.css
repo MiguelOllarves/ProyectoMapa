@@ -1,0 +1,294 @@
+/* ========== VARIABLES GLOBALES ========== */
+:root {
+  --cyan: #00ffff;
+  --cyan-20: rgba(0, 255, 255, 0.2);
+  --cyan-30: rgba(0, 255, 255, 0.3);
+  --dark-blue: #001f3f;
+  --gradient-blue: linear-gradient(45deg, #001f3f, #003366);
+  --button-padding: 12px 20px;
+  --transition: all 0.3s ease;
+}
+
+/* ========== ESTILOS BASE ========== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #000;
+  color: #fff;
+  animation: globalGlow 5s infinite ease-in-out;
+}
+
+/* ========== ANIMACIONES ========== */
+@keyframes globalGlow {
+  0%, 100% { filter: brightness(1) contrast(1); }
+  50% { filter: brightness(1.1) contrast(1.1); }
+}
+
+@keyframes hologramEffect {
+  0% { transform: rotate(45deg) translateX(-50%); }
+  100% { transform: rotate(45deg) translateX(50%); }
+}
+
+@keyframes particleGlow {
+  from { opacity: 0.3; transform: scale(0.8); }
+  to { opacity: 0.8; transform: scale(1.2); }
+}
+
+/* ========== COMPONENTES PRINCIPALES ========== */
+#globe-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: var(--transition);
+}
+
+.glow-particle {
+  position: absolute;
+  background: radial-gradient(circle, var(--cyan) 10%, transparent 70%);
+  width: 15px;
+  height: 15px;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  animation: particleGlow 2s infinite alternate;
+}
+
+/* ========== CONTROLES ========== */
+#controls {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 25px;
+  border-radius: 15px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--cyan-20);
+  box-shadow: 0 0 30px var(--cyan-30);
+  visibility: hidden;
+}
+
+#fileInput {
+  display: none;
+}
+
+.custom-file-upload {
+  background: linear-gradient(45deg, #00b4d8, #0077b6);
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  border: 2px solid #90e0ef;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: var(--transition);
+}
+
+.custom-file-upload:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 180, 216, 0.5);
+}
+
+.custom-file-upload svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+/* ========== VISTAS ========== */
+#dataView {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.5s ease-in-out;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: radial-gradient(circle at center, #000428 0%, var(--dark-blue) 100%);
+}
+
+#dataView.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#map-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+/* ========== CONTROLES DEL MAPA ========== */
+.map-controls {
+  position: fixed; /* Cambiado de absolute */
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+}
+
+.map-controls button, 
+.tool-button {
+  padding: var(--button-padding);
+  background: var(--gradient-blue);
+  color: var(--cyan);
+  border: 1px solid var(--cyan);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+}
+
+.map-controls button:hover,
+.tool-button:hover {
+  background: linear-gradient(45deg, #003366, var(--dark-blue));
+  box-shadow: 0 0 15px var(--cyan-30);
+  transform: translateY(-2px);
+}
+
+/* ========== COMPONENTES ESPECÍFICOS ========== */
+.camera-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.camera-modal.active {
+  display: flex;
+}
+
+.camera-modal video {
+  width: 80%;
+  max-width: 800px;
+  border: 2px solid #0af;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 40px rgba(0, 170, 255, 0.4);
+}
+
+.camera-modal button {
+  background: linear-gradient(45deg, #ff0000, #cc0000);
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: var(--transition);
+  border: 1px solid #ff4444;
+}
+
+.camera-modal button:hover {
+  background: linear-gradient(45deg, #cc0000, #ff0000);
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+}
+
+.camera-modal-content {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 700px;
+  position: relative;
+  text-align: center;
+  border: 1px solid var(--cyan);
+  box-shadow: 0 0 40px var(--cyan-30);
+}
+
+.p-marker {
+  background: #ff4444;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 15px;
+  border: 2px solid white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  transition: transform 0.2s ease;
+}
+
+.p-marker:hover {
+  transform: scale(1.1);
+  z-index: 1000;
+}
+
+.pai-tooltip {
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  #controls {
+    top: 10px;
+    left: 10px;
+    padding: 15px;
+  }
+
+  .map-controls {
+    top: 10px;
+    right: 10px;
+    left: auto;
+    flex-direction: column;
+    padding: 10px;
+    transform: none;
+  }
+
+  .custom-file-upload,
+  .tool-button {
+    padding: 10px 15px;
+    font-size: 0.9em;
+  }
+
+  .tool-button span {
+    display: block;
+    text-align: center;
+  }
+
+  .camera-modal video {
+    width: 95%;
+  }
+}
